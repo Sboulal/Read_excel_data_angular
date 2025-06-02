@@ -6,8 +6,7 @@ import { TableDisplayComponent } from './table-display/table-display.component';
 const routes: Routes = [
   { path: '', redirectTo: '/upload', pathMatch: 'full' },
   { path: 'upload', component: UploadComponent },
-  { path: 'table-display', component: TableDisplayComponent },
-  // { path: '**', redirectTo: '/upload' }
+  { path: 'table-display', component: TableDisplayComponent }
 ];
 
 @NgModule({

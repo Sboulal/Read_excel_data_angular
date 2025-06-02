@@ -26,10 +26,9 @@ export class UploadComponent {
         const worksheet = workbook.Sheets[sheetName];
         const users = XLSX.utils.sheet_to_json(worksheet);
         
-        // Sauvegarder les données dans le service
-        this.dataService.setUsers(users);
+       this.dataService.setUsers(users);
         
-        // Naviguer vers la page d'affichage
+        
         this.router.navigate(['/table-display']);
       };
       fileReader.readAsArrayBuffer(file);

@@ -18,7 +18,6 @@ export class TableDisplayComponent implements OnInit {
   ngOnInit() {
     this.dataService.users$.subscribe(users => {
       this.users = users;
-      // Si pas de données, rediriger vers upload
       if (this.users.length === 0) {
         this.router.navigate(['/upload']);
       }
@@ -29,22 +28,4 @@ export class TableDisplayComponent implements OnInit {
     this.router.navigate(['/upload']);
   }
 
-  downloadExcel() {
-    if (this.users.length > 0) {
-      import('xlsx').then(xlsx => {
-        const worksheet = xlsx.utils.json_to_sheet(this.users);
-        const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-        const excelBuffer = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-        this.saveAsExcelFile(excelBuffer, 'exported_data');
-      });
-    }
-  }
-
-  private saveAsExcelFile(buffer: any, fileName: string) {
-    const data = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(data);
-    link.download = fileName + '.xlsx';
-    link.click();
-  }
 }
