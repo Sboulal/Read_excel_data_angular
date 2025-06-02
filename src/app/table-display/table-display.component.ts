@@ -9,6 +9,11 @@ import { DataService } from '../data.service';
 })
 export class TableDisplayComponent implements OnInit {
   users: any[] = [];
+  filteredUsers: any[] = [];
+  nonEmptyColumns: string[] = [];
+  isLoading: boolean = false;
+  successMessage: string = '';
+  errorMessage: string = '';
 
   constructor(
     private router: Router,
@@ -20,12 +25,91 @@ export class TableDisplayComponent implements OnInit {
       this.users = users;
       if (this.users.length === 0) {
         this.router.navigate(['/upload']);
+      } else {
+        this.filterNonEmptyColumns();
       }
     });
+  }
+
+  /**
+   * Identifie les colonnes qui contiennent au moins une valeur non vide
+   */
+  private getNonEmptyColumns(): string[] {
+    if (this.users.length === 0) return [];
+
+    const allColumns = Object.keys(this.users[0]);
+    
+    return allColumns.filter(column => {
+      return this.users.some(user => {
+        const value = user[column];
+        return value !== null && 
+               value !== undefined && 
+               value !== '' && 
+               (typeof value === 'string' ? value.trim() !== '' : true);
+      });
+    });
+  }
+
+  /**
+   * Filtre les données pour ne garder que les colonnes non vides
+   */
+  private filterNonEmptyColumns(): void {
+    this.nonEmptyColumns = this.getNonEmptyColumns();
+    
+    this.filteredUsers = this.users.map(user => {
+      const filteredUser: any = {};
+      this.nonEmptyColumns.forEach(column => {
+        filteredUser[column] = user[column];
+      });
+      return filteredUser;
+    });
+  }
+
+  /**
+   * Retourne les données filtrées (utilisez cette méthode dans le template)
+   */
+  getFilteredData(): any[] {
+    return this.filteredUsers;
+  }
+
+  /**
+   * Retourne les noms des colonnes non vides (pour les en-têtes du tableau)
+   */
+  getColumnNames(): string[] {
+    return this.nonEmptyColumns;
+  }
+
+  /**
+   * Méthode pour obtenir le nom d'affichage de la colonne
+   */
+  getDisplayName(columnName: string): string {
+    const displayNames: { [key: string]: string } = {
+      'Nom': 'Nom',
+      'Prenom': 'Prénom',
+      'Name': 'Nom',
+      'FirstName': 'Prénom',
+      'Email': 'Email',
+      'Phone': 'Téléphone',
+      'Address': 'Adresse'
+    };
+    return displayNames[columnName] || columnName;
   }
 
   goBackToUpload() {
     this.router.navigate(['/upload']);
   }
+  
+
+  sendData(data: any) {
+    this.dataService.createItem(data).subscribe(
+      (response) => {
+        console.log('Données envoyées avec succès : ', response);
+      },
+      (error) => {
+        console.error('Erreur lors de l\'envoi des données : ', error);
+      }
+    );
+  }
+  
 
 }
