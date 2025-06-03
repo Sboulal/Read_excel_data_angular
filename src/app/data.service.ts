@@ -20,10 +20,9 @@ export class DataService {
   getUsers() {
     return this.usersSubject.value;
   }
-  createItem(item: any): Observable<any> {
-    return this.http.post<any>('/api/items', item);
+  postUser(user: any): Observable<any> {
+    return this.http.post('https://jsonplaceholder.typicode.com/posts', user);
   }
-  
 
   
 }

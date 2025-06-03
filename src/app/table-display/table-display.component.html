@@ -17,17 +17,20 @@
     <table class="table table-striped table-hover">
       <thead class="table-dark">
         <tr>
+          
           <!-- Utiliser les colonnes dynamiques -->
           <th *ngFor="let column of getColumnNames()">
             {{ getDisplayName(column) }}
           </th>
+
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <!-- Utiliser les données filtrées -->
-        <tr *ngFor="let u of getFilteredData(); let i = index">
-          <!-- Afficher seulement les colonnes non vides -->
+        <!-- <tr *ngFor="let u of getFilteredData(); let i = index">
+
+         
           <td *ngFor="let column of getColumnNames()">
             {{ u[column] }}
           </td>
@@ -35,13 +38,34 @@
             <div class="btn-group" role="group">
             
         
-             <!-- les données filtrées
-             <button (click)="sendAllUsersToAPI()" [disabled]="isLoading">
-              Send All Data
-            </button> -->
-            <button (click)="sendData(({ prenom: 'A', Nom: 'test1' }))" [disabled]="isLoading">
-              Send User
+             
+            <div *ngFor="let user of users; let i = index">
+              <button (click)="selectAndSubmitUser(i)">
+               Data
+              </button>
+            </div>
+            </div>
+          </td>
+        </tr> -->
+        <!-- <tr *ngFor="let user of this.dataService.getUsers(); let i = index">
+          <td>{{ user.name || 'test' + (i + 1) }}</td>
+          <td>
+            <button (click)="selectAndSubmitUser(i)" class="btn btn-primary">
+              Post Data
             </button>
+          </td>
+        </tr> -->
+        <tr *ngFor="let user of this.dataService.getUsers(); let i = index">
+          <!-- Dynamic columns based on getColumnNames() -->
+          <td *ngFor="let column of getColumnNames()">
+            {{ user[column] }}
+          </td>
+          <!-- Action button column -->
+          <td>
+            <div class="btn-group" role="group">
+              <button (click)="selectAndSubmitUser(i)" class="btn btn-primary">
+                Post Data
+              </button>
             </div>
           </td>
         </tr>

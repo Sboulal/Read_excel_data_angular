@@ -14,11 +14,10 @@ export class TableDisplayComponent implements OnInit {
   isLoading: boolean = false;
   successMessage: string = '';
   errorMessage: string = '';
+  selectedUserIndex: number = 0;
 
-  constructor(
-    private router: Router,
-    private dataService: DataService
-  ) {}
+  
+  constructor(public dataService: DataService,private router: Router,) {}
 
   ngOnInit() {
     this.dataService.users$.subscribe(users => {
@@ -100,16 +99,22 @@ export class TableDisplayComponent implements OnInit {
   }
   
 
-  sendData(data: any) {
-    this.dataService.createItem(data).subscribe(
-      (response) => {
-        console.log('Données envoyées avec succès : ', response);
-      },
-      (error) => {
-        console.error('Erreur lors de l\'envoi des données : ', error);
-      }
-    );
+  selectAndSubmitUser(userIndex: number) {
+    this.selectedUserIndex = userIndex;
+    this.SubmitData();
   }
+
+  SubmitData() {
+    const selectedUser = this.users[this.selectedUserIndex];
+    
+    if (selectedUser) {
+      this.dataService.postUser(selectedUser).subscribe(response => {
+        console.log('Posted user:', selectedUser);
+        console.log('Response:', response);
+      });
+    }
+  }
+
   
 
 }
