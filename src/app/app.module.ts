@@ -7,6 +7,7 @@ import { TableDisplayComponent } from './table-display/table-display.component';
 import { UploadComponent } from './upload/upload.component';
 import { HttpClientModule } from '@angular/common/http';
 import { GetDataComponent } from './get-data/get-data.component';
+import { AddUserComponent } from './add-user/add-user.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { GetDataComponent } from './get-data/get-data.component';
     AppComponent,
     TableDisplayComponent,
     UploadComponent,
-    GetDataComponent
+    GetDataComponent,
+    AddUserComponent
 
   ],
   imports: [

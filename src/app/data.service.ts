@@ -25,7 +25,7 @@ export class DataService {
   }
 
   postUser_data(user: any): Observable<any> {
-    return this.http.post('https://eevent.ma/api/getbadges', user);
+    return this.http.post('https://jsonplaceholder.typicode.com/posts', user);
   }
   
 }

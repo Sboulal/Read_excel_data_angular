@@ -48,6 +48,7 @@ export class GetDataComponent implements OnInit {
 
   SubmitData() {
     const selectedUser = this.users[this.selectedUserIndex];
+    console.log('Selected User:', selectedUser);
     
     if (selectedUser) {
       this.dataService.postUser_data(selectedUser).subscribe(response => {
