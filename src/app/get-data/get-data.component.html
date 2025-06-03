@@ -1,0 +1,44 @@
+
+<div class="container">
+  <div class="header">
+    <h2>Users Data</h2>
+    <button (click)="refreshData()" class="refresh-btn">Refresh Data</button>
+  </div>
+
+  <div class="table-container">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>nom</th>
+          <th>prenom</th>
+          <th>Statut</th>
+          <th>created_at</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users; let i = index">
+          <td>{{ user.id || i + 1 }}</td>
+          <td>{{ user.nom }}</td>
+          <td>{{ user.prenom }}</td>
+          <td>
+            <span class="green-checkmark" *ngIf="user.valide=== '1'">&#10003;</span>
+            <span *ngIf="user.valide === '0'">&#x274C;</span>
+          </td>
+          <td>{{ user.created_at | date: 'short' }}</td>
+          <td>
+            <div class="btn-group" role="group">
+              <button class="btn btn-primary"  (click)="selectAndSubmitUser(i)">
+                Imprimer
+              </button>
+            </div>
+            
+          </td>
+        </tr>
+        <tr *ngIf="users.length === 0">
+          <td colspan="7" class="no-data">No users found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -89,7 +89,8 @@ export class TableDisplayComponent implements OnInit {
       'FirstName': 'Prénom',
       'Email': 'Email',
       'Phone': 'Téléphone',
-      'Address': 'Adresse'
+      'Address': 'Adresse',
+      'Statut': 'Statut',
     };
     return displayNames[columnName] || columnName;
   }

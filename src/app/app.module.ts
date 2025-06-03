@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { TableDisplayComponent } from './table-display/table-display.component';
 import { UploadComponent } from './upload/upload.component';
 import { HttpClientModule } from '@angular/common/http';
+import { GetDataComponent } from './get-data/get-data.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     TableDisplayComponent,
-    UploadComponent
+    UploadComponent,
+    GetDataComponent
 
   ],
   imports: [
