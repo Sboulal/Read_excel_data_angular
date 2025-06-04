@@ -224,10 +224,16 @@ export class GetDataComponent implements OnInit, OnDestroy {
       this.isLoading = true;
       this.errorMessage = '';
       this.successMessage = '';
-
-      this.dataService.postUser_data(selectedUser).subscribe({
+  
+      // Create object with only nom and prenom
+      const userData = {
+        nom: selectedUser.nom,
+        prenom: selectedUser.prenom
+      };
+  
+      this.dataService.postUser_data(userData).subscribe({
         next: (response) => {
-          console.log('Posted user:', selectedUser);
+          console.log('Posted user data:', userData);
           console.log('Response:', response);
           this.successMessage = 'Données envoyées avec succès!';
           this.isLoading = false;
