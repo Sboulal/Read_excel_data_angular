@@ -2,13 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DataService } from '../data.service';
 
-
 // Interface for User data structure
 interface User {
   id?: number;
   nom: string;
   prenom: string;
-  valide: string
+  valide: string;
   created_at: string;
   updated_at: string;
 }
@@ -20,12 +19,14 @@ interface User {
 })
 export class GetDataComponent implements OnInit {
   users: User[] = [];
+  filteredUsers: User[] = [];
   selectedUserIndex: number = 0;
+  searchTerm: string = '';
   
   // Replace with your actual API endpoint
   private apiUrl = 'https://eevent.ma/api/getbadges';
 
-  constructor(private http: HttpClient,public dataService: DataService,) {}
+  constructor(private http: HttpClient, public dataService: DataService) {}
 
   ngOnInit(): void {
     this.fetchUsers();
@@ -34,13 +35,34 @@ export class GetDataComponent implements OnInit {
   fetchUsers(): void {
     this.http.get<User[]>(this.apiUrl).subscribe(data => {
       this.users = data;
+      this.filteredUsers = [...this.users]; // Initialize filtered users
     });
   }
 
   refreshData(): void {
     this.fetchUsers();
   }
- 
+
+  filterUsers(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredUsers = [...this.users];
+      return;
+    }
+
+    const searchLower = this.searchTerm.toLowerCase().trim();
+    this.filteredUsers = this.users.filter(user => {
+      return (
+        user.nom.toLowerCase().startsWith(searchLower) ||
+        user.prenom.toLowerCase().startsWith(searchLower) ||
+        (user.id && user.id.toString().startsWith(searchLower))
+      );
+    });
+  }
+
+  getOriginalIndex(user: User): number {
+    return this.users.findIndex(u => u === user);
+  }
+
   selectAndSubmitUser(userIndex: number) {
     this.selectedUserIndex = userIndex;
     this.SubmitData();

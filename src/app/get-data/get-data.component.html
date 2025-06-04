@@ -1,8 +1,19 @@
-
 <div class="container">
   <div class="header">
-    <h2>Users Data</h2>
+    <h2>Données de l'utilisateur:</h2>
     <!-- <button (click)="refreshData()" class="refresh-btn">Refresh Data</button> -->
+  </div>
+
+  <!-- Search Input -->
+  <div class="search-container">
+    <input 
+      type="text" 
+      class="search-input" 
+      placeholder="Rechercher (nom, prénom, ID)..." 
+      [(ngModel)]="searchTerm"
+      (input)="filterUsers()"
+    />
+    
   </div>
 
   <div class="table-container">
@@ -13,13 +24,13 @@
           <th>Nom</th>
           <th>Prenom</th>
           <th>Statut</th>
-          <th>Created_at</th>
+          <th>Creation de date</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users; let i = index">
-          <td>{{ user.id || i + 1 }}</td>
+        <tr *ngFor="let user of filteredUsers; let i = index">
+          <td>{{ user.id || getOriginalIndex(user) + 1 }}</td>
           <td>{{ user.nom }}</td>
           <td>{{ user.prenom }}</td>
           <td>
@@ -29,15 +40,16 @@
           <td>{{ user.created_at | date: 'short' }}</td>
           <td>
             <div class="btn-group" role="group">
-              <button (click)="selectAndSubmitUser(i)" class="btn btn-secondary me-2">
-                Send
+              <button (click)="selectAndSubmitUser(getOriginalIndex(user))" class="btn btn-secondary me-2">
+                Imprimer
               </button>
             </div>
-            
           </td>
         </tr>
-        <tr *ngIf="users.length === 0">
-          <td colspan="7" class="no-data">No users found</td>
+        <tr *ngIf="filteredUsers.length === 0">
+          <td colspan="6" class="no-data">
+            {{ searchTerm ? 'Aucun utilisateur trouvé' : 'Aucun utilisateur' }}
+          </td>
         </tr>
       </tbody>
     </table>
