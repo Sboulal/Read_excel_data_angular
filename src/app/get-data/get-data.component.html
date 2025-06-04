@@ -2,7 +2,7 @@
 <div class="container">
   <div class="header">
     <h2>Users Data</h2>
-    <button (click)="refreshData()" class="refresh-btn">Refresh Data</button>
+    <!-- <button (click)="refreshData()" class="refresh-btn">Refresh Data</button> -->
   </div>
 
   <div class="table-container">
@@ -14,6 +14,7 @@
           <th>prenom</th>
           <th>Statut</th>
           <th>created_at</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -28,7 +29,7 @@
           <td>{{ user.created_at | date: 'short' }}</td>
           <td>
             <div class="btn-group" role="group">
-              <button class="btn btn-primary"  (click)="selectAndSubmitUser(i)">
+              <button (click)="selectAndSubmitUser(i)" class="btn btn-secondary me-2">
                 Imprimer
               </button>
             </div>

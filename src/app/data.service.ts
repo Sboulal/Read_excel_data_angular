@@ -28,4 +28,8 @@ export class DataService {
     return this.http.post('https://jsonplaceholder.typicode.com/posts', user);
   }
   
+  postUserinput(user: any): Observable<any> 
+  {
+    return this.http.post('https://jsonplaceholder.typicode.com/posts', user) 
+  }
 }

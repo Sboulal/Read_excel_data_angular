@@ -1,76 +1,53 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { DataService } from '../data.service';
 
 interface User {
-  id: number;
+  id?: number;
   prenom: string;
   nom: string;
-  dateAjout: string;
 }
+
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.scss']
 })
 export class AddUserComponent {
-  formData = {
-    prenom: '',
-    nom: ''
+  fullName: string = '';
+  user: User = {
+    nom: '',
+    prenom: ''
   };
 
-  users: User[] = [];
-  showSuccess = false;
-  errors: { [key: string]: string } = {};
+  // Inject your dataService instead of HttpClient
+  constructor(private dataService:DataService,private http: HttpClient) {} // Replace 'any' with your actual DataService type
 
-  clearError(field: string): void {
-    if (this.errors[field]) {
-      delete this.errors[field];
+  onSubmit() {
+    if (this.fullName.trim()) {
+      // Split the full name into nom and prenom
+      const nameParts = this.fullName.trim().split(' ');
+      
+      if (nameParts.length >= 2) {
+        this.user.prenom = nameParts[0];
+        this.user.nom = nameParts.slice(1).join(' '); // In case there are multiple last names
+      } else {
+        // If only one word is entered, treat it as prenom
+        this.user.prenom = nameParts[0];
+        this.user.nom = '';
+      }
+
+      // Use your dataService instead of direct HTTP call
+      this.dataService.postUserinput(this.user).subscribe(response => {
+        console.log('User added:', this.user);
+        console.log('Response:', response);
+        this.dataService.setUsers([...this.dataService.getUsers(), this.user]);
+        this.fullName = '';
+      });
+    } else {
+      alert('Veuillez entrer le nom et prénom');
     }
   }
 
-  getInputClass(field: string): string {
-    const baseClass = 'w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500';
-    const errorClass = this.errors[field] ? 'border-red-500' : 'border-gray-300';
-    return `${baseClass} ${errorClass}`;
-  }
-
-  validateForm(): boolean {
-    this.errors = {};
-    
-    if (!this.formData.prenom.trim()) {
-      this.errors['prenom'] = 'Le prénom est requis';
-    }
-    
-    if (!this.formData.nom.trim()) {
-      this.errors['nom'] = 'Le nom est requis';
-    }
-    
-    return Object.keys(this.errors).length === 0;
-  }
-
-  handleSubmit(): void {
-    if (!this.validateForm()) {
-      return;
-    }
-
-    // Add user to list
-    const newUser: User = {
-      id: Date.now(),
-      prenom: this.formData.prenom.trim(),
-      nom: this.formData.nom.trim(),
-      dateAjout: new Date().toLocaleDateString('fr-FR')
-    };
-
-    this.users.push(newUser);
-    
-    // Reset form
-    this.formData = { prenom: '', nom: '' };
-    
-    // Show success message
-    this.showSuccess = true;
-    setTimeout(() => this.showSuccess = false, 3000);
-  }
-
-  handleDeleteUser(id: number): void {
-    this.users = this.users.filter(user => user.id !== id);
-  }
+ 
 }
