@@ -153,10 +153,8 @@ export class TableDisplayComponent implements OnInit, OnDestroy {
    */
   getDisplayName(columnName: string): string {
     const displayNames: { [key: string]: string } = {
-      'Nom': 'Nom',
       'Prenom': 'Prénom',
-      'Name': 'Nom',
-      'FirstName': 'Prénom',
+      'nom': 'Nom',
       'Email': 'Email',
       'Phone': 'Téléphone',
       'Address': 'Adresse',
@@ -237,14 +235,36 @@ export class TableDisplayComponent implements OnInit, OnDestroy {
   SubmitData() {
     const selectedUser = this.filteredUsers[this.selectedUserIndex];
     
+    // Debug: Log the selected user to see what data is available
+    console.log('Selected user data:', selectedUser);
+    console.log('Available keys:', Object.keys(selectedUser));
+    console.log('Prenom value:', selectedUser.prenom);
+    console.log('Nom value:', selectedUser.nom);
+    
     if (selectedUser) {
       this.isLoading = true;
       this.errorMessage = '';
       this.successMessage = '';
-
-      this.dataService.postUser(selectedUser).subscribe({
+  
+      // Check all possible name fields and combine them
+      const possibleNameFields = ['prenom', 'nom', 'Prenom', 'Nom', 'name', 'Name', 'fullName', 'full_name'];
+      const nameValues = possibleNameFields
+        .map(field => selectedUser[field])
+        .filter(value => value && value.toString().trim() !== '');
+  
+      console.log('Found name values:', nameValues);
+  
+      // Create the modified user with combined name
+      const modifiedUser = {
+        prenom: nameValues.length > 0 ? nameValues.join(' ').trim() : 'No Name Found',
+        nom: " "
+      };
+  
+      console.log('Modified user to send:', modifiedUser);
+  
+      this.dataService.postUser(modifiedUser).subscribe({
         next: (response) => {
-          console.log('Posted user:', selectedUser);
+          console.log('Posted user:', modifiedUser);
           console.log('Response:', response);
           this.successMessage = 'Données envoyées avec succès!';
           this.isLoading = false;
@@ -255,6 +275,8 @@ export class TableDisplayComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         }
       });
+    } else {
+      console.log('No user selected or user not found at index:', this.selectedUserIndex);
     }
   }
 }

@@ -25,18 +25,12 @@ export class AddUserComponent {
 
   onSubmit() {
     if (this.fullName.trim()) {
-      // Split the full name into nom and prenom
-      const nameParts = this.fullName.trim().split(' ');
+      // Store the entire full name in prenom
+      this.user.prenom = this.fullName.trim();
       
-      if (nameParts.length >= 2) {
-        this.user.prenom = nameParts[0];
-        this.user.nom = nameParts.slice(1).join(' '); // In case there are multiple last names
-      } else {
-        // If only one word is entered, treat it as prenom
-        this.user.prenom = nameParts[0];
-        this.user.nom = '';
-      }
-
+      // Store a single space in nom
+      this.user.nom = " ";
+  
       // Use your dataService instead of direct HTTP call
       this.dataService.postUserinput(this.user).subscribe(response => {
         console.log('User added:', this.user);
@@ -48,6 +42,5 @@ export class AddUserComponent {
       alert('Veuillez entrer le nom et prénom');
     }
   }
-
  
 }
