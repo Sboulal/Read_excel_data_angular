@@ -4,8 +4,8 @@ import { DataService } from '../data.service';
 
 interface User {
   id?: number;
-  prenom: string;
-  nom: string;
+  first_name: string;
+  last_name: string;
 }
 
 @Component({
@@ -16,8 +16,8 @@ interface User {
 export class AddUserComponent {
   fullName: string = '';
   user: User = {
-    nom: '',
-    prenom: ''
+    last_name: '',
+    first_name: ''
   };
 
   // Inject your dataService instead of HttpClient
@@ -25,11 +25,11 @@ export class AddUserComponent {
 
   onSubmit() {
     if (this.fullName.trim()) {
-      // Store the entire full name in prenom
-      this.user.prenom = this.fullName.trim();
+      // Store the entire full name in first_name
+      this.user.first_name = this.fullName.trim();
       
-      // Store a single space in nom
-      this.user.nom = " ";
+      // Store a single space in last_name
+      this.user.last_name = " ";
   
       // Use your dataService instead of direct HTTP call
       this.dataService.postUserinput(this.user).subscribe(response => {
@@ -39,7 +39,7 @@ export class AddUserComponent {
         this.fullName = '';
       });
     } else {
-      alert('Veuillez entrer le nom et prénom');
+      alert('Veuillez entrer le last_name et prélast_name');
     }
   }
  

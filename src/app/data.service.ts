@@ -108,14 +108,14 @@ export class DataService {
   }
 
   postUser(user: any): Observable<any> {
-    return this.http.post('https://jsonplaceholder.typicode.com/posts', user);
+    return this.http.post('http://127.0.0.1:5000/print-label', user);
   }
 
   postUser_data(user: any): Observable<any> {
-    return this.http.post('https://jsonplaceholder.typicode.com/posts', user);
+    return this.http.post('http://127.0.0.1:5000/print-label', user);
   }
   
   postUserinput(user: any): Observable<any> {
-    return this.http.post('https://jsonplaceholder.typicode.com/posts', user);
+    return this.http.post('http://127.0.0.1:5000/print-label', user);
   }
 }

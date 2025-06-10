@@ -256,8 +256,8 @@ export class TableDisplayComponent implements OnInit, OnDestroy {
   
       // Create the modified user with combined name
       const modifiedUser = {
-        prenom: nameValues.length > 0 ? nameValues.join(' ').trim() : 'No Name Found',
-        nom: " "
+        first_name: nameValues.length > 0 ? nameValues.join(' ').trim() : 'No Name Found',
+        last_name: " "
       };
   
       console.log('Modified user to send:', modifiedUser);

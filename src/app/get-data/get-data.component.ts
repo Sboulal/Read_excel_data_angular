@@ -9,6 +9,7 @@ interface User {
   id?: number;
   nom: string;
   prenom: string;
+
   valide: string;
   created_at: string;
   updated_at: string;
@@ -48,7 +49,7 @@ export class GetDataComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   
   // Replace with your actual API endpoint
-  private apiUrl = 'https://eevent.ma/api/getbadges';
+  private apiUrl = 'https://amfromevent.ma/api/getbadges';
 
   constructor(private http: HttpClient, public dataService: DataService) {
     // Debounce search input to avoid excessive filtering
@@ -227,8 +228,8 @@ export class GetDataComponent implements OnInit, OnDestroy {
   
       // Create object with only nom and prenom
       const userData = {
-        nom: selectedUser.nom,
-        prenom: selectedUser.prenom
+        last_name: selectedUser.nom,
+        first_name: selectedUser.prenom
       };
   
       this.dataService.postUser_data(userData).subscribe({
