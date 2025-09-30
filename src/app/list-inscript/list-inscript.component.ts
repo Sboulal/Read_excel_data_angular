@@ -1,15 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { DataService } from '../data.service';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 // Interface for User data structure
 interface User {
   id?: number;
   nom: string;
   prenom: string;
-
+  estPresent: string;
   valide: string;
   created_at: string;
   updated_at: string;
@@ -23,17 +22,18 @@ interface PaginationConfig {
 }
 
 @Component({
-  selector: 'app-get-data',
-  templateUrl: './get-data.component.html',
-  styleUrls: ['./get-data.component.scss']
+  selector: 'app-list-inscript',
+  templateUrl: './list-inscript.component.html',
+  styleUrls: ['./list-inscript.component.scss']
 })
-export class GetDataComponent implements OnInit, OnDestroy {
+export class ListInscriptComponent implements OnInit, OnDestroy {
   users: User[] = [];
   filteredUsers: User[] = [];
   paginatedUsers: User[] = [];
   selectedUserIndex: number = 0;
   searchTerm: string = '';
   isLoading: boolean = false;
+  loadingUserId: number | null = null; // Track which user is being updated
   successMessage: string = '';
   errorMessage: string = '';
 
@@ -48,8 +48,7 @@ export class GetDataComponent implements OnInit, OnDestroy {
   private searchSubject = new Subject<string>();
   private destroy$ = new Subject<void>();
   
- 
-  private apiUrl = 'https://amfromevent.ma/api/getbadges';
+  private apiUrl = 'https://amfromevent.ma/api/getinscrits';
 
   constructor(private http: HttpClient, public dataService: DataService) {
     // Debounce search input to avoid excessive filtering
@@ -222,31 +221,49 @@ export class GetDataComponent implements OnInit, OnDestroy {
     console.log('Selected User:', selectedUser);
     
     if (selectedUser) {
-      this.isLoading = true;
+      // Set loading state for this specific user
+      this.loadingUserId = selectedUser.id || null;
       this.errorMessage = '';
       this.successMessage = '';
   
-      // Create object with only nom and prenom
+      // Create object with only id
       const userData = {
-        last_name: selectedUser.nom,
-        first_name: selectedUser.prenom
+        id: selectedUser.id,
       };
   
-      
-      this.dataService.postUser_data(userData).subscribe({
+      this.dataService.postestpresent(userData).subscribe({
         next: (response) => {
           console.log('Posted user data:', userData);
           console.log('Response:', response);
-          this.successMessage = 'Données envoyées avec succès!';
-          this.isLoading = false;
+          
+          // Update the user's estPresent status in the local array
+          selectedUser.estPresent = '1';
+          
+          this.successMessage = 'Utilisateur marqué comme présent!';
+          this.loadingUserId = null;
+          
+          // Clear success message after 3 seconds
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 3000);
         },
         error: (error) => {
           console.error('Error posting user:', error);
           this.errorMessage = 'Erreur lors de l\'envoi des données.';
-          this.isLoading = false;
+          this.loadingUserId = null;
+          
+          // Clear error message after 5 seconds
+          setTimeout(() => {
+            this.errorMessage = '';
+          }, 5000);
         }
       });
     }
+  }
+
+  // Check if a specific user is loading
+  isUserLoading(userId: number | undefined): boolean {
+    return this.loadingUserId === userId;
   }
 
   // Getter methods for template

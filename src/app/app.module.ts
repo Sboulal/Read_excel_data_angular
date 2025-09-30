@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { GetDataComponent } from './get-data/get-data.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { FormsModule } from '@angular/forms';
+import { ListInscriptComponent } from './list-inscript/list-inscript.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { FormsModule } from '@angular/forms';
     TableDisplayComponent,
     UploadComponent,
     GetDataComponent,
-    AddUserComponent
+    AddUserComponent,
+    ListInscriptComponent
 
   ],
   imports: [

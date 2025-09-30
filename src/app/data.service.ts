@@ -118,4 +118,7 @@ export class DataService {
   postUserinput(user: any): Observable<any> {
     return this.http.post('http://127.0.0.1:5000/print-label', user);
   }
+  postestpresent(user: any): Observable<any> {
+    return this.http.post('https://amfromevent.ma/api/estpresent', user);
+  }
 }
